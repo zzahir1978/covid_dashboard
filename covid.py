@@ -109,7 +109,7 @@ df_states = pd.merge(df_cases,df_deaths,on='state')
 df_states = pd.merge(df_states,df_vaksin,on='state')
 df_states = df_states.reset_index()
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(['Malaysia','States','ASEAN','World','Others'])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(['Malaysia','States','ASEAN','World','Others','Disclaimer'])
 
 with tab1:
     st.header(":bar_chart: Malaysia Covid19 Dashboard")
@@ -149,36 +149,27 @@ with tab1:
     df_selection = df_covid
     # Malaysia Charts 
     # New Cases Bar Chart
-    fig_cases = px.bar(
-            df_selection,x="Year",y=["cases_new","cases_fvax"],barmode="group",
-            title="Total Cases by Year",template="plotly_white")
+    fig_cases = px.bar(df_selection,x="Year",y=["cases_new","cases_fvax"],barmode="group",title="Total Cases by Year",template="plotly_white")
     fig_cases.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
-            plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
     fig_cases.update_annotations(font=dict(family="Helvetica", size=10))
     fig_cases.update_xaxes(title_text='Malaysia', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_cases.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
-    fig_cases.add_hline(y=df_selection['cases_new'].mean(), line_dash="dot",line_color="red",
-              annotation_text="Average Cases", annotation_position="bottom left")
+    fig_cases.add_hline(y=df_selection['cases_new'].mean(), line_dash="dot",line_color="red",annotation_text="Average Cases", annotation_position="bottom left")
 
     # Deaths Cases Bar Chart
-    fig_deaths = px.bar(
-            df_selection,x="Year",y=["deaths_new",'deaths_fvax'],barmode='group',
-            title="Total Deaths by Year",template="plotly_white")
+    fig_deaths = px.bar(df_selection,x="Year",y=["deaths_new",'deaths_fvax'],barmode='group',title="Total Deaths by Year",template="plotly_white")
     fig_deaths.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
-            plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
     fig_deaths.update_annotations(font=dict(family="Helvetica", size=10))
     fig_deaths.update_xaxes(title_text='Malaysia', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_deaths.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
-    fig_deaths.add_hline(y=df_selection['deaths_new'].mean(), line_dash="dot",line_color="red",
-              annotation_text="Average Deaths", annotation_position="bottom left")
+    fig_deaths.add_hline(y=df_selection['deaths_new'].mean(), line_dash="dot",line_color="red",annotation_text="Average Deaths", annotation_position="bottom left")
 
     # Vaccination Bar Chart
-    fig_vax = px.bar(
-            df_selection,x="Year",y=["daily_full",'daily_booster'],barmode='group',
-            title="Total Vaccination by Year",template="plotly_white")
-    fig_vax.update_layout(
-            height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
-            plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+    fig_vax = px.bar(df_selection,x="Year",y=["daily_full",'daily_booster'],barmode='group',title="Total Vaccination by Year",template="plotly_white")
+    fig_vax.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
     fig_vax.update_annotations(font=dict(family="Helvetica", size=10))
     fig_vax.update_xaxes(title_text='Malaysia', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_vax.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
@@ -192,37 +183,36 @@ with tab1:
 
     # Daily Cases Chart
     fig_cases_daily = make_subplots(shared_xaxes=True, specs=[[{'secondary_y': True}]])
-    fig_cases_daily.add_trace(go.Scatter(x = df_mas_cases_graph['date'], y = df_mas_cases_graph['cases_new'],name='New Cases',
-            fill='tozeroy',mode='lines', line = dict(color='blue', width=1)), secondary_y=True)
-    fig_cases_daily.add_trace(go.Scatter(x = df_mas_cases_graph['date'], y = df_mas_cases_graph['vax_perc'],name='Vax %',
-            fill='tozeroy',mode='lines',line = dict(color='red', width=1)), secondary_y=False)
+    fig_cases_daily.add_trace(go.Scatter(x = df_mas_cases_graph['date'], y = df_mas_cases_graph['cases_new'],name='New Cases',fill='tozeroy',
+        mode='lines', line = dict(color='blue', width=1)), secondary_y=True)
+    fig_cases_daily.add_trace(go.Scatter(x = df_mas_cases_graph['date'], y = df_mas_cases_graph['vax_perc'],name='Vax %',fill='tozeroy',
+        mode='lines',line = dict(color='red', width=1)), secondary_y=False)
     fig_cases_daily.update_layout(height=350,title_text='Daily New Cases VS Vax %',title_x=0.5,font=dict(family="Helvetica", size=10),
-            xaxis=dict(tickmode="array"),plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
+        xaxis=dict(tickmode="array"),plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
     fig_cases_daily.update_annotations(font=dict(family="Helvetica", size=10))
     fig_cases_daily.update_xaxes(title_text='Malaysia', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_cases_daily.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
 
     # Daily Deaths Chart
     fig_deaths_daily = make_subplots(shared_xaxes=True, specs=[[{'secondary_y': True}]])
-    fig_deaths_daily.add_trace(go.Scatter(x = df_mas_deaths_graph['date'], y = df_mas_deaths_graph['deaths_new'],name='Deaths Cases',
-            fill='tozeroy',mode='lines', line = dict(color='blue', width=1)), secondary_y=True)
-    fig_deaths_daily.add_trace(go.Scatter(x = df_mas_deaths_graph['date'], y = df_mas_deaths_graph['vax_perc'],name='Vax %',
-            fill='tozeroy',mode='lines',line = dict(color='red', width=1)), secondary_y=False)
-    fig_deaths_daily.update_layout(height=350,title_text='Daily Deaths Cases VS Vax %',title_x=0.5,font=dict(family="Helvetica", 
-            size=10),xaxis=dict(tickmode="array"),plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,
-            showlegend=False)
+    fig_deaths_daily.add_trace(go.Scatter(x = df_mas_deaths_graph['date'], y = df_mas_deaths_graph['deaths_new'],name='Deaths Cases',fill='tozeroy',
+        mode='lines', line = dict(color='blue', width=1)), secondary_y=True)
+    fig_deaths_daily.add_trace(go.Scatter(x = df_mas_deaths_graph['date'], y = df_mas_deaths_graph['vax_perc'],name='Vax %',fill='tozeroy',
+        mode='lines',line = dict(color='red', width=1)), secondary_y=False)
+    fig_deaths_daily.update_layout(height=350,title_text='Daily Deaths Cases VS Vax %',title_x=0.5,font=dict(family="Helvetica", size=10),
+        xaxis=dict(tickmode="array"),plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
     fig_deaths_daily.update_annotations(font=dict(family="Helvetica", size=10))
     fig_deaths_daily.update_xaxes(title_text='Malaysia', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_deaths_daily.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
 
     # Daily Vaksin Chart
     fig_vax_daily = make_subplots(shared_xaxes=True, specs=[[{'secondary_y': True}]])
-    fig_vax_daily.add_trace(go.Scatter(x = df_mas_vaksin['date'], y = df_mas_vaksin['daily'],name='Daily Vax',fill='tozeroy',
-            mode='lines', line = dict(color='blue', width=1)), secondary_y=True)
-    fig_vax_daily.add_trace(go.Scatter(x = df_mas_vaksin['date'], y = df_mas_vaksin['cum_vax'],name='Cum. Vax',fill='tozeroy',
-            mode='lines',line = dict(color='red', width=1)), secondary_y=False)
-    fig_vax_daily.update_layout(height=350,title_text='Daily Vaccination',title_x=0.5,font=dict(family="Helvetica", size=10),
-            xaxis=dict(tickmode="array"),plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
+    fig_vax_daily.add_trace(go.Scatter(x = df_mas_vaksin['date'], y = df_mas_vaksin['daily'],name='Daily Vax',fill='tozeroy',mode='lines', 
+        line = dict(color='blue', width=1)), secondary_y=True)
+    fig_vax_daily.add_trace(go.Scatter(x = df_mas_vaksin['date'], y = df_mas_vaksin['cum_vax'],name='Cum. Vax',fill='tozeroy',mode='lines',
+        line = dict(color='red', width=1)), secondary_y=False)
+    fig_vax_daily.update_layout(height=350,title_text='Daily Vaccination',title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
     fig_vax_daily.update_annotations(font=dict(family="Helvetica", size=10))
     fig_vax_daily.update_xaxes(title_text='Malaysia', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_vax_daily.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
@@ -240,8 +230,8 @@ with tab2:
     # Total Cases
     fig_bar_states_cases = make_subplots(shared_xaxes=True, specs=[[{'secondary_y': True}]])
     fig_bar_states_cases.add_trace(go.Bar(x = df_states['state'], y = df_states['cases_new'],name='Total Cases'))
-    fig_bar_states_cases.update_layout(title_text='Total Cases',title_x=0.5,font=dict(family="Helvetica", size=10),
-            xaxis=dict(tickmode="array"),plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
+    fig_bar_states_cases.update_layout(title_text='Total Cases',title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
     fig_bar_states_cases.update_annotations(font=dict(family="Helvetica", size=10))
     fig_bar_states_cases.update_xaxes(title_text='', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_bar_states_cases.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
@@ -251,8 +241,8 @@ with tab2:
     # Total Deaths
     fig_bar_states_cases = make_subplots(shared_xaxes=True, specs=[[{'secondary_y': True}]])
     fig_bar_states_cases.add_trace(go.Bar(x = df_states['state'], y = df_states['deaths_new'],name='Total Deaths'))
-    fig_bar_states_cases.update_layout(title_text='Total Deaths',title_x=0.5,font=dict(family="Helvetica", size=10),
-            xaxis=dict(tickmode="array"),plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
+    fig_bar_states_cases.update_layout(title_text='Total Deaths',title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
     fig_bar_states_cases.update_annotations(font=dict(family="Helvetica", size=10))
     fig_bar_states_cases.update_xaxes(title_text='', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_bar_states_cases.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
@@ -262,35 +252,31 @@ with tab2:
     # Total Vaccination
     fig_bar_states_cases = make_subplots(shared_xaxes=True, specs=[[{'secondary_y': True}]])
     fig_bar_states_cases.add_trace(go.Bar(x = df_states['state'], y = df_states['daily'],name='Total Vaccination'))
-    fig_bar_states_cases.update_layout(title_text='Total Vaccination',title_x=0.5,font=dict(family="Helvetica", size=10),
-            xaxis=dict(tickmode="array"),plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
+    fig_bar_states_cases.update_layout(title_text='Total Vaccination',title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
     fig_bar_states_cases.update_annotations(font=dict(family="Helvetica", size=10))
     fig_bar_states_cases.update_xaxes(title_text='', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_bar_states_cases.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     # Graph layout
     st.plotly_chart(fig_bar_states_cases, use_container_width=True)
 
-
     # States Cases [PIE CHART]
     fig_states_cases = make_subplots(specs=[[{"type": "domain"}]])
-    fig_states_cases.add_trace(go.Pie(
-        values=df_states['cases_new'],labels=df_states['state'],textposition='inside',textinfo='label+percent'),row=1, col=1)
+    fig_states_cases.add_trace(go.Pie(values=df_states['cases_new'],labels=df_states['state'],textposition='inside',textinfo='label+percent'),row=1, col=1)
     fig_states_cases.update_layout(height=350, showlegend=False,title_text='States Positive Cases',title_x=0.5)
     fig_states_cases.update_annotations(font=dict(family="Helvetica", size=10))
     fig_states_cases.update_layout(font=dict(family="Helvetica", size=10))
 
     # States Deaths [PIE CHART]
     fig_states_deaths = make_subplots(specs=[[{"type": "domain"}]])
-    fig_states_deaths.add_trace(go.Pie(
-        values=df_states['deaths_new'],labels=df_states['state'],textposition='inside',textinfo='label+percent'),row=1, col=1)
+    fig_states_deaths.add_trace(go.Pie(values=df_states['deaths_new'],labels=df_states['state'],textposition='inside',textinfo='label+percent'),row=1, col=1)
     fig_states_deaths.update_layout(height=350, showlegend=False,title_text='States Deaths Cases',title_x=0.5)
     fig_states_deaths.update_annotations(font=dict(family="Helvetica", size=10))
     fig_states_deaths.update_layout(font=dict(family="Helvetica", size=10))
 
     # States Vaccination [PIE CHART]
     fig_states_vax = make_subplots(specs=[[{"type": "domain"}]])
-    fig_states_vax.add_trace(go.Pie(
-        values=df_states['daily'],labels=df_states['state'],textposition='inside',textinfo='label+percent'),row=1, col=1)
+    fig_states_vax.add_trace(go.Pie(values=df_states['daily'],labels=df_states['state'],textposition='inside',textinfo='label+percent'),row=1, col=1)
     fig_states_vax.update_layout(height=350, showlegend=False,title_text='States Vaccination',title_x=0.5)
     fig_states_vax.update_annotations(font=dict(family="Helvetica", size=10))
     fig_states_vax.update_layout(font=dict(family="Helvetica", size=10))
@@ -307,36 +293,27 @@ with tab3:
     st.subheader('ASEAN Covid19 Cases')
     # ASEAN Bar Chart
     # ASEAN Total Cases
-    fig_asean_cases = px.bar(
-        df_asean_cases,x="location",y="total_cases",title="Total Positive Cases",template="plotly_white")
-    fig_asean_cases.update_layout(
-        height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    fig_asean_cases = px.bar(df_asean_cases,x="location",y="total_cases",title="Total Positive Cases",template="plotly_white")
+    fig_asean_cases.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,xaxis_title=None)
     fig_asean_cases.update_annotations(font=dict(family="Helvetica", size=10))
-    fig_asean_cases.update_xaxes(title_text='ASEAN Top 10',showgrid=False, zeroline=False, showline=True, linewidth=2, 
-        linecolor='black')
+    fig_asean_cases.update_xaxes(title_text='ASEAN Top 10',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_asean_cases.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
 
     # ASEAN Deaths Cases
-    fig_asean_deaths = px.bar(
-        df_asean_deaths,x="location",y="total_deaths",title="Total Deaths Cases",template="plotly_white")
-    fig_asean_deaths.update_layout(
-        height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    fig_asean_deaths = px.bar(df_asean_deaths,x="location",y="total_deaths",title="Total Deaths Cases",template="plotly_white")
+    fig_asean_deaths.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,xaxis_title=None)
     fig_asean_deaths.update_annotations(font=dict(family="Helvetica", size=10))
-    fig_asean_deaths.update_xaxes(title_text='ASEAN Top 10',showgrid=False, zeroline=False, showline=True, linewidth=2, 
-        linecolor='black')
+    fig_asean_deaths.update_xaxes(title_text='ASEAN Top 10',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_asean_deaths.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
 
     # ASEAN Vaccination
-    fig_asean_vax = px.bar(
-        df_asean_vax,x="location",y="people_fully_vaccinated",title="Total Vaccination",template="plotly_white")
-    fig_asean_vax.update_layout(
-        height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    fig_asean_vax = px.bar(df_asean_vax,x="location",y="people_fully_vaccinated",title="Total Vaccination",template="plotly_white")
+    fig_asean_vax.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,xaxis_title=None)
     fig_asean_vax.update_annotations(font=dict(family="Helvetica", size=10))
-    fig_asean_vax.update_xaxes(title_text='ASEAN Top 10',showgrid=False, zeroline=False, showline=True, linewidth=2, 
-        linecolor='black')
+    fig_asean_vax.update_xaxes(title_text='ASEAN Top 10',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_asean_vax.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
 
     # Graph layout
@@ -350,36 +327,27 @@ with tab4:
     st.subheader('World Countries Covid19 Cases')
     # World Top Bar Chart
     # World Top Total Cases
-    fig_world_top_cases = px.bar(
-        dfworld_top_cases,x="location",y="total_cases",title="Total Positive Cases",template="plotly_white")
-    fig_world_top_cases.update_layout(
-        height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    fig_world_top_cases = px.bar(dfworld_top_cases,x="location",y="total_cases",title="Total Positive Cases",template="plotly_white")
+    fig_world_top_cases.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,xaxis_title=None)
     fig_world_top_cases.update_annotations(font=dict(family="Helvetica", size=10))
-    fig_world_top_cases.update_xaxes(title_text='World Top 10',showgrid=False, zeroline=False, showline=True, linewidth=2, 
-        linecolor='black')
+    fig_world_top_cases.update_xaxes(title_text='World Top 10',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_world_top_cases.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
 
     # World Top Deaths Cases
-    fig_world_top_deaths = px.bar(
-        dfworld_top_deaths,x="location",y="total_deaths",title="Total Deaths Cases",template="plotly_white")
-    fig_world_top_deaths.update_layout(
-        height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    fig_world_top_deaths = px.bar(dfworld_top_deaths,x="location",y="total_deaths",title="Total Deaths Cases",template="plotly_white")
+    fig_world_top_deaths.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,xaxis_title=None)
     fig_world_top_deaths.update_annotations(font=dict(family="Helvetica", size=10))
-    fig_world_top_deaths.update_xaxes(title_text='World Top 10',showgrid=False, zeroline=False, showline=True, linewidth=2, 
-        linecolor='black')
+    fig_world_top_deaths.update_xaxes(title_text='World Top 10',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_world_top_deaths.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
 
     # World Top Vaccination
-    fig_world_top_vax = px.bar(
-        dfworld_top_vax,x="location",y="people_fully_vaccinated",title="Total Vaccination",template="plotly_white")
-    fig_world_top_vax.update_layout(
-        height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    fig_world_top_vax = px.bar(dfworld_top_vax,x="location",y="people_fully_vaccinated",title="Total Vaccination",template="plotly_white")
+    fig_world_top_vax.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,xaxis_title=None)
     fig_world_top_vax.update_annotations(font=dict(family="Helvetica", size=10))
-    fig_world_top_vax.update_xaxes(title_text='World Top 10',showgrid=False, zeroline=False, showline=True, linewidth=2, 
-        linecolor='black')
+    fig_world_top_vax.update_xaxes(title_text='World Top 10',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_world_top_vax.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
 
     # Graph layout
@@ -393,36 +361,27 @@ with tab4:
     # Continent Bar Chart
     # Continent Positive Cases Bar Chart
     df_selection_continent = dfworld2
-    fig_con_cases = px.bar(
-        df_selection_continent,x="continent",y="total_cases",title="Total Positive Cases",template="plotly_white")
-    fig_con_cases.update_layout(
-        height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    fig_con_cases = px.bar(df_selection_continent,x="continent",y="total_cases",title="Total Positive Cases",template="plotly_white")
+    fig_con_cases.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,xaxis_title=None)
     fig_con_cases.update_annotations(font=dict(family="Helvetica", size=10))
-    fig_con_cases.update_xaxes(title_text='World Continent',showgrid=False, zeroline=False, showline=True, linewidth=2, 
-        linecolor='black')
+    fig_con_cases.update_xaxes(title_text='World Continent',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_con_cases.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
 
     # Continent Deaths Cases Bar Chart
-    fig_con_deaths = px.bar(
-        df_selection_continent,x="continent",y="total_deaths",title="Total Deaths Cases",template="plotly_white")
-    fig_con_deaths.update_layout(
-        height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    fig_con_deaths = px.bar(df_selection_continent,x="continent",y="total_deaths",title="Total Deaths Cases",template="plotly_white")
+    fig_con_deaths.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,xaxis_title=None)
     fig_con_deaths.update_annotations(font=dict(family="Helvetica", size=10))
-    fig_con_deaths.update_xaxes(title_text='World Continent',showgrid=False, zeroline=False, showline=True, linewidth=2, 
-        linecolor='black')
+    fig_con_deaths.update_xaxes(title_text='World Continent',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_con_deaths.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
 
     # Continent Vaccination Bar Chart
-    fig_con_vax = px.bar(
-        df_selection_continent,x="continent",y="people_fully_vaccinated",title="Total Vaccinations",template="plotly_white")
-    fig_con_vax.update_layout(
-        height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    fig_con_vax = px.bar(df_selection_continent,x="continent",y="people_fully_vaccinated",title="Total Vaccinations",template="plotly_white")
+    fig_con_vax.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
     fig_con_vax.update_annotations(font=dict(family="Helvetica", size=10))
-    fig_con_vax.update_xaxes(title_text='World Continent',showgrid=False, zeroline=False, showline=True, linewidth=2, 
-        linecolor='black')
+    fig_con_vax.update_xaxes(title_text='World Continent',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_con_vax.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
 
     # Graph layout
@@ -440,30 +399,24 @@ with tab5:
 
     # Country Selection Bar Chart
     # Country Positive Cases Bar Chart
-    fig_country_cases = px.bar(
-        df_selection_country,x="location",y="total_cases",title="Total Positive Cases",template="plotly_white")
-    fig_country_cases.update_layout(
-        height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    fig_country_cases = px.bar(df_selection_country,x="location",y="total_cases",title="Total Positive Cases",template="plotly_white")
+    fig_country_cases.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,xaxis_title=None)
     fig_country_cases.update_annotations(font=dict(family="Helvetica", size=10))
     fig_country_cases.update_xaxes(title_text='Country',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_country_cases.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
 
     # Country Deaths Cases Bar Chart
-    fig_country_deaths = px.bar(
-        df_selection_country,x="location",y="total_deaths",title="Total Deaths Cases",template="plotly_white")
-    fig_country_deaths.update_layout(
-        height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    fig_country_deaths = px.bar(df_selection_country,x="location",y="total_deaths",title="Total Deaths Cases",template="plotly_white")
+    fig_country_deaths.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,xaxis_title=None)
     fig_country_deaths.update_annotations(font=dict(family="Helvetica", size=10))
     fig_country_deaths.update_xaxes(title_text='Country',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_country_deaths.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
 
     # Country Vaccination Bar Chart
-    fig_country_vax = px.bar(
-        df_selection_country,x="location",y="people_fully_vaccinated",title="Total Vaccinations",template="plotly_white")
-    fig_country_vax.update_layout(
-        height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    fig_country_vax = px.bar(df_selection_country,x="location",y="people_fully_vaccinated",title="Total Vaccinations",template="plotly_white")
+    fig_country_vax.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
     fig_country_vax.update_annotations(font=dict(family="Helvetica", size=10))
     fig_country_vax.update_xaxes(title_text='Country',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
@@ -475,6 +428,21 @@ with tab5:
     col1.plotly_chart(fig_country_cases, use_container_width=True)
     col2.plotly_chart(fig_country_deaths, use_container_width=True)
     col3.plotly_chart(fig_country_vax, use_container_width=True)
+
+with tab6:
+    st.subheader('Disclaimer')
+    st.write(
+        '''
+        Covid19 Dashboard shows the current cases and trends focusing on Malaysia and also selected countries around the world. 
+        Data for these dashboards are retrieved from [KKM Github pages](https://github.com/MoH-Malaysia/covid19-public) and 
+        from [Johns Hopkins University CSSE Github pages](https://github.com/CSSEGISandData/COVID-19). 
+        More details on the Covid19 reports can be view at [Covid19 Full Report](https://zzahir1978.github.io/projects/Covid19MalaysiaNow.html).
+    ''')
+    st.write(
+        '''
+        All data visualisation shown on this website is based on the author's experience and knowledge in presenting data in at its best forms.
+        '''
+    )
 
 # ---- HIDE STREAMLIT STYLE ----
 hide_st_style = """
