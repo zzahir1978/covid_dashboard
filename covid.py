@@ -11,7 +11,7 @@ from email.mime import image
 import requests
 
 st.set_page_config(page_title="Covid Dashboard", page_icon=":warning:", layout="wide")       # https://www.webfx.com/tools/emoji-cheat-sheet/
-st.title(":bar chart:"+" Covid19 Dashboard")
+st.title(":bar_chart:"+" Covid19 Dashboard")
 
 @st.experimental_memo
 def read_csv(path) -> pd.DataFrame:
