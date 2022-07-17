@@ -11,7 +11,7 @@ from email.mime import image
 import requests
 
 st.set_page_config(page_title="Covid Dashboard", page_icon=":warning:", layout="wide")       # https://www.webfx.com/tools/emoji-cheat-sheet/
-st.title(":warning:"+" Covid19 Dashboard")
+st.title(":bar chart:"+" Covid19 Dashboard")
 
 @st.experimental_memo
 def read_csv(path) -> pd.DataFrame:
@@ -109,10 +109,10 @@ df_states = pd.merge(df_cases,df_deaths,on='state')
 df_states = pd.merge(df_states,df_vaksin,on='state')
 df_states = df_states.reset_index()
 
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(['Malaysia','States','ASEAN','World','Others','Disclaimer'])
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(['Overview','Malaysia','States','ASEAN','World','Others','Disclaimer'])
 
 with tab1:
-    st.header(":bar_chart: Malaysia Covid19 Dashboard")
+    st.header("Malaysia Covid19 Overview")
     st.subheader(f"Updated On: {df_date_end.at[df_date_end.index[0],'date']}")
     st.markdown("##")
     first_column, second_column, third_column, fourth_column = st.columns(4)
@@ -144,7 +144,7 @@ with tab1:
         #st.subheader(f"{fatal_rate:,.2f}%")
         st.subheader(f"{(new_cases/new_cases):,.0f} : "f"{(new_deaths/new_cases):,.3f}")
 
-    st.markdown("""---""")
+with tab2:
     st.subheader('Malaysia Covid19 Cases') 
     df_selection = df_covid
     # Malaysia Charts 
@@ -224,7 +224,7 @@ with tab1:
     col2.plotly_chart(fig_deaths_daily, use_container_width=True)
     col3.plotly_chart(fig_vax_daily, use_container_width=True)
 
-with tab2:
+with tab3:
     st.subheader('Malaysia States Covid19 Cases')
     # States Graphs
     # Total Cases
@@ -289,7 +289,7 @@ with tab2:
     col1, col2 = st.columns(2)
     col1.plotly_chart(fig_states_vax, use_container_width=True)
 
-with tab3:
+with tab4:
     st.subheader('ASEAN Covid19 Cases')
     # ASEAN Bar Chart
     # ASEAN Total Cases
@@ -323,7 +323,7 @@ with tab3:
     col2.plotly_chart(fig_asean_deaths, use_container_width=True)
     col3.plotly_chart(fig_asean_vax, use_container_width=True)
 
-with tab4:
+with tab5:
     st.subheader('World Countries Covid19 Cases')
     # World Top Bar Chart
     # World Top Total Cases
@@ -391,7 +391,7 @@ with tab4:
     col2.plotly_chart(fig_con_deaths, use_container_width=True)
     col3.plotly_chart(fig_con_vax, use_container_width=True)
 
-with tab5:
+with tab6:
     st.subheader('Covid19 Cases By Selected Country/Continent:')
     # Selection Options
     Location = st.multiselect("Select the Country:",options=dfworld1["location"].unique(),default=None)
@@ -429,7 +429,7 @@ with tab5:
     col2.plotly_chart(fig_country_deaths, use_container_width=True)
     col3.plotly_chart(fig_country_vax, use_container_width=True)
 
-with tab6:
+with tab7:
     st.subheader('Disclaimer')
     st.write(
         '''
