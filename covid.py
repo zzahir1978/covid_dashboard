@@ -228,8 +228,9 @@ with tab3:
     st.subheader('Malaysia States Covid19 Cases')
     # States Graphs
     # Total Cases
+    df_states_cases_fig = df_states.sort_values('cases_new',ascending=False)
     fig_bar_states_cases = make_subplots(shared_xaxes=True, specs=[[{'secondary_y': True}]])
-    fig_bar_states_cases.add_trace(go.Bar(x = df_states['state'], y = df_states['cases_new'],name='Total Cases'))
+    fig_bar_states_cases.add_trace(go.Bar(x = df_states_cases_fig['state'], y = df_states_cases_fig['cases_new'],name='Total Cases'))
     fig_bar_states_cases.update_layout(title_text='Total Cases',title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
     fig_bar_states_cases.update_annotations(font=dict(family="Helvetica", size=10))
@@ -239,26 +240,28 @@ with tab3:
     st.plotly_chart(fig_bar_states_cases, use_container_width=True)
 
     # Total Deaths
-    fig_bar_states_cases = make_subplots(shared_xaxes=True, specs=[[{'secondary_y': True}]])
-    fig_bar_states_cases.add_trace(go.Bar(x = df_states['state'], y = df_states['deaths_new'],name='Total Deaths'))
-    fig_bar_states_cases.update_layout(title_text='Total Deaths',title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    df_states_deaths_fig = df_states.sort_values('deaths_new',ascending=False)
+    fig_bar_states_deaths = make_subplots(shared_xaxes=True, specs=[[{'secondary_y': True}]])
+    fig_bar_states_deaths.add_trace(go.Bar(x = df_states_deaths_fig['state'], y = df_states_deaths_fig['deaths_new'],name='Total Deaths'))
+    fig_bar_states_deaths.update_layout(title_text='Total Deaths',title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
-    fig_bar_states_cases.update_annotations(font=dict(family="Helvetica", size=10))
-    fig_bar_states_cases.update_xaxes(title_text='', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
-    fig_bar_states_cases.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_bar_states_deaths.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_bar_states_deaths.update_xaxes(title_text='', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_bar_states_deaths.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     # Graph layout
-    st.plotly_chart(fig_bar_states_cases, use_container_width=True)
+    st.plotly_chart(fig_bar_states_deaths, use_container_width=True)
 
     # Total Vaccination
-    fig_bar_states_cases = make_subplots(shared_xaxes=True, specs=[[{'secondary_y': True}]])
-    fig_bar_states_cases.add_trace(go.Bar(x = df_states['state'], y = df_states['daily'],name='Total Vaccination'))
-    fig_bar_states_cases.update_layout(title_text='Total Vaccination',title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    df_states_vacc_fig = df_states.sort_values('daily',ascending=False)
+    fig_bar_states_vacc = make_subplots(shared_xaxes=True, specs=[[{'secondary_y': True}]])
+    fig_bar_states_vacc.add_trace(go.Bar(x = df_states_vacc_fig['state'], y = df_states_vacc_fig['daily'],name='Total Vaccination'))
+    fig_bar_states_vacc.update_layout(title_text='Total Vaccination',title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),yaxis_title=None,showlegend=False)
-    fig_bar_states_cases.update_annotations(font=dict(family="Helvetica", size=10))
-    fig_bar_states_cases.update_xaxes(title_text='', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
-    fig_bar_states_cases.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_bar_states_vacc.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_bar_states_vacc.update_xaxes(title_text='', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_bar_states_vacc.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     # Graph layout
-    st.plotly_chart(fig_bar_states_cases, use_container_width=True)
+    st.plotly_chart(fig_bar_states_vacc, use_container_width=True)
 
     # States Cases [PIE CHART]
     fig_states_cases = make_subplots(specs=[[{"type": "domain"}]])
