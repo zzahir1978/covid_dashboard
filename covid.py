@@ -24,6 +24,7 @@ df_mas_deaths = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/covi
 df_mas_vaksin = pd.read_csv('https://raw.githubusercontent.com/CITF-Malaysia/citf-public/main/vaccination/vax_malaysia.csv')
 df_mas_pop = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/static/population.csv')
 df_bloodDonor = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/data-darah-public/main/donations_state.csv')
+df_hospital = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/data-resources-public/main/bedutil_state.csv')
 # Creating new columns
 df_mas_cases['cum_cases'] = df_mas_cases['cases_new'].cumsum()
 df_mas_cases['cum_recover'] = df_mas_cases['cases_recovered'].cumsum()
@@ -110,7 +111,7 @@ df_states = pd.merge(df_cases,df_deaths,on='state')
 df_states = pd.merge(df_states,df_vaksin,on='state')
 df_states = df_states.reset_index()
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(['Overview','Malaysia','States','ASEAN','World','Others','Blood Donation','Disclaimer'])
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs(['Overview','Malaysia','States','ASEAN','World','Others','Blood Donation','Infrastructure','Disclaimer'])
 
 with tab1:
     st.header("Malaysia Covid19 Overview")
@@ -438,7 +439,7 @@ with tab7:
     df_bloodDonor['Year']= df_bloodDonor['date'].apply(lambda x: getYear(x))
     df_bloodDonor['Month']= df_bloodDonor['date'].apply(lambda x: getMonth(x))
     df_bloodDonor = df_bloodDonor.groupby('Year').sum().reset_index()
-    #st.write(df_bloodDonor)
+    
     # Blood Donation Annual Bar Chart
     fig_blood_annual = px.bar(df_bloodDonor,x="Year",y="daily",title="Annual Blood Donation (Person)",template="plotly_white")
     fig_blood_annual.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
@@ -449,8 +450,59 @@ with tab7:
     # Graph layout
     st.plotly_chart(fig_blood_annual, use_container_width=True)
 
+    # Blood Donation By Types Bar Chart
+    fig_blood_types_annual = px.bar(df_bloodDonor,x="Year",y=["blood_a","blood_b","blood_o","blood_ab"],barmode="group",title="Annual Blood Donation By Types (Person)",
+        template="plotly_white")
+    fig_blood_types_annual.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+    fig_blood_types_annual.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_blood_types_annual.update_xaxes(title_text='Year', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_blood_types_annual.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    # Graph layout
+    st.plotly_chart(fig_blood_types_annual, use_container_width=True)
+
+    # Blood Donation Location Chart
+    fig_blood_types_annual = px.bar(df_bloodDonor,x="Year",y=["location_centre","location_mobile"],barmode="group",title="Blood Donation Location",
+        template="plotly_white")
+    fig_blood_types_annual.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+    fig_blood_types_annual.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_blood_types_annual.update_xaxes(title_text='Year', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_blood_types_annual.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    # Graph layout
+    st.plotly_chart(fig_blood_types_annual, use_container_width=True)
+    #st.write(df_bloodDonor)
 
 with tab8:
+    st.subheader('Infrastructure')
+    df_hospital = df_hospital.drop(0)
+    # Hospital Nos. Of Beds Chart ICU
+    df_hospital = df_hospital.sort_values('beds_icu', ascending=False)
+    fig_hospital_beds_icu = px.bar(df_hospital,x="state",y=["beds_icu"],barmode="group",title="Hospital Nos. Of Beds By States (ICU)",
+        template="plotly_white")
+    fig_hospital_beds_icu.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+    fig_hospital_beds_icu.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_hospital_beds_icu.update_xaxes(title_text='States', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_hospital_beds_icu.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_hospital_beds_icu.add_hline(y=df_hospital['beds_icu'].mean(), line_dash="dot",line_color="red",annotation_text="Average Nos.", annotation_position="bottom right")
+    # Hospital Nos. Of Beds Chart Non ICU
+    df_hospital = df_hospital.sort_values('beds_nonicu', ascending=False)
+    fig_hospital_beds_nonIcu = px.bar(df_hospital,x="state",y=["beds_nonicu"],barmode="group",title="Hospital Nos. Of Beds By States (Non ICU)",
+        template="plotly_white")
+    fig_hospital_beds_nonIcu.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+    fig_hospital_beds_nonIcu.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_hospital_beds_nonIcu.update_xaxes(title_text='States', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_hospital_beds_nonIcu.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_hospital_beds_nonIcu.add_hline(y=df_hospital['beds_nonicu'].mean(), line_dash="dot",line_color="red",annotation_text="Average Nos.", annotation_position="bottom right")
+    # Graph layout
+    col1, col2 = st.columns(2)
+    col1.plotly_chart(fig_hospital_beds_icu, use_container_width=True)
+    col2.plotly_chart(fig_hospital_beds_nonIcu, use_container_width=True)
+    #st.write(df_hospital)
+
+with tab9:
     st.subheader('Disclaimer')
     st.write(
         '''
