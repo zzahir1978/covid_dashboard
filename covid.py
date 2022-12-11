@@ -448,7 +448,7 @@ with tab7:
     fig_blood_annual.update_xaxes(title_text='Year',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_blood_annual.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     # Graph layout
-    st.plotly_chart(fig_blood_annual, use_container_width=True)
+    #st.plotly_chart(fig_blood_annual, use_container_width=True)
 
     # Blood Donation By Types Bar Chart
     fig_blood_types_annual = px.bar(df_bloodDonor,x="Year",y=["blood_a","blood_b","blood_o","blood_ab"],barmode="group",title="Annual Blood Donation By Types (Person)",
@@ -459,23 +459,29 @@ with tab7:
     fig_blood_types_annual.update_xaxes(title_text='Year', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_blood_types_annual.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     # Graph layout
-    st.plotly_chart(fig_blood_types_annual, use_container_width=True)
+    #st.plotly_chart(fig_blood_types_annual, use_container_width=True)
 
     # Blood Donation Location Chart
-    fig_blood_types_annual = px.bar(df_bloodDonor,x="Year",y=["location_centre","location_mobile"],barmode="group",title="Blood Donation Location",
+    fig_blood_location_annual = px.bar(df_bloodDonor,x="Year",y=["location_centre","location_mobile"],barmode="group",title="Blood Donation Location",
         template="plotly_white")
-    fig_blood_types_annual.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+    fig_blood_location_annual.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
-    fig_blood_types_annual.update_annotations(font=dict(family="Helvetica", size=10))
-    fig_blood_types_annual.update_xaxes(title_text='Year', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
-    fig_blood_types_annual.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_blood_location_annual.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_blood_location_annual.update_xaxes(title_text='Year', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_blood_location_annual.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     # Graph layout
-    st.plotly_chart(fig_blood_types_annual, use_container_width=True)
+    col1, col2 = st.columns(2)
+    col1.plotly_chart(fig_blood_types_annual, use_container_width=True)
+    col2.plotly_chart(fig_blood_annual, use_container_width=True)
     #st.write(df_bloodDonor)
 
 with tab8:
     st.subheader('Infrastructure')
     df_hospital = df_hospital.drop(0)
+    df_mas_pop = df_mas_pop.drop([0,1])
+    df_hospital = pd.merge(df_hospital,df_mas_pop, on='state')
+    df_hospital['total_beds'] = df_hospital['beds_icu'] + df_hospital['beds_nonicu']
+    df_hospital['percentage'] = (df_hospital['total_beds']/df_hospital['pop'])*100
     # Hospital Nos. Of Beds Chart ICU
     df_hospital = df_hospital.sort_values('beds_icu', ascending=False)
     fig_hospital_beds_icu = px.bar(df_hospital,x="state",y=["beds_icu"],barmode="group",title="Hospital Nos. Of Beds By States (ICU)",
@@ -496,11 +502,24 @@ with tab8:
     fig_hospital_beds_nonIcu.update_xaxes(title_text='States', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_hospital_beds_nonIcu.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_hospital_beds_nonIcu.add_hline(y=df_hospital['beds_nonicu'].mean(), line_dash="dot",line_color="red",annotation_text="Average Nos.", annotation_position="bottom right")
+    # Hospital Nos. Of Beds Percentage
+    df_hospital = df_hospital.sort_values('percentage', ascending=False)
+    fig_hospital_percentage = px.bar(df_hospital,x="state",y=["percentage"],barmode="group",title="Hospital Total Beds VS Population By States (%)",
+        template="plotly_white")
+    fig_hospital_percentage.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+    fig_hospital_percentage.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_hospital_percentage.update_xaxes(title_text='States', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_hospital_percentage.update_yaxes(title_text='%', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_hospital_percentage.add_hline(y=df_hospital['percentage'].mean(), line_dash="dot",line_color="red",annotation_text="Average Nos.", annotation_position="bottom right")
+    
     # Graph layout
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     col1.plotly_chart(fig_hospital_beds_icu, use_container_width=True)
     col2.plotly_chart(fig_hospital_beds_nonIcu, use_container_width=True)
+    col3.plotly_chart(fig_hospital_percentage, use_container_width=True)
     #st.write(df_hospital)
+    #st.write(df_mas_pop)
 
 with tab9:
     st.subheader('Disclaimer')
