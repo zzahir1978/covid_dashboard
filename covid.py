@@ -23,6 +23,7 @@ df_mas_cases = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/covid
 df_mas_deaths = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/deaths_malaysia.csv')
 df_mas_vaksin = pd.read_csv('https://raw.githubusercontent.com/CITF-Malaysia/citf-public/main/vaccination/vax_malaysia.csv')
 df_mas_pop = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/static/population.csv')
+df_bloodDonor = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/data-darah-public/main/donations_state.csv')
 # Creating new columns
 df_mas_cases['cum_cases'] = df_mas_cases['cases_new'].cumsum()
 df_mas_cases['cum_recover'] = df_mas_cases['cases_recovered'].cumsum()
@@ -109,7 +110,7 @@ df_states = pd.merge(df_cases,df_deaths,on='state')
 df_states = pd.merge(df_states,df_vaksin,on='state')
 df_states = df_states.reset_index()
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(['Overview','Malaysia','States','ASEAN','World','Others','Disclaimer'])
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(['Overview','Malaysia','States','ASEAN','World','Others','Blood Donation','Disclaimer'])
 
 with tab1:
     st.header("Malaysia Covid19 Overview")
@@ -433,6 +434,23 @@ with tab6:
     col3.plotly_chart(fig_country_vax, use_container_width=True)
 
 with tab7:
+    st.subheader('Blood Donation')
+    df_bloodDonor['Year']= df_bloodDonor['date'].apply(lambda x: getYear(x))
+    df_bloodDonor['Month']= df_bloodDonor['date'].apply(lambda x: getMonth(x))
+    df_bloodDonor = df_bloodDonor.groupby('Year').sum().reset_index()
+    #st.write(df_bloodDonor)
+    # Blood Donation Annual Bar Chart
+    fig_blood_annual = px.bar(df_bloodDonor,x="Year",y="daily",title="Annual Blood Donation (Person)",template="plotly_white")
+    fig_blood_annual.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+    fig_blood_annual.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_blood_annual.update_xaxes(title_text='Year',showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_blood_annual.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    # Graph layout
+    st.plotly_chart(fig_blood_annual, use_container_width=True)
+
+
+with tab8:
     st.subheader('Disclaimer')
     st.write(
         '''
