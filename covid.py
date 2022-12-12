@@ -114,12 +114,23 @@ df_states = df_states.reset_index()
 tab1, tab2, tab3, tab4, tab5 = st.tabs(['Overview','Covid19','Blood Donation','Infrastructure','Disclaimer'])
 
 with tab1:
-    st.write("""
-    [KKMNOW](https://data.moh.gov.my/) is an open data source in collaboration between the Ministry of Health Malaysia and the Department of Statistics Malaysia to institutionalise transparency and 
-    make data accessible for all. 
-    """)
-    st.write("The open data can be downloaded at [KKM Github Page](https://github.com/MoH-Malaysia/).")
-    
+    st.subheader("[KKMNOW](https://data.moh.gov.my/) is an open data source in collaboration between the Ministry of Health Malaysia and the Department of Statistics Malaysia to institutionalise transparency and make data accessible for all.")
+    st.subheader("All the information shown in this webpages are extracted from the relevant KKM open data sources.")
+    st.subheader("The open data can be downloaded at [KKM Github Page](https://github.com/MoH-Malaysia/).")
+    # Footer
+    st.write("---")
+    components.html(
+        """
+        <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+        <div style="text-align:center">
+        <p style="font-family:verdana">Powered By:</p>
+        <span class="iconify" data-icon="logos:python"></span> <span class="iconify" data-icon="simple-icons:pandas"></span> <span class="iconify" data-icon="simple-icons:plotly"></span> <span class="iconify" data-icon="icon-park:github"></span> <span class="iconify" data-icon="logos:github"></span> <span class="iconify" data-icon="simple-icons:streamlit"></span>
+        <p style="font-family:verdana">zahiruddin.zahidanishah<span class="iconify" data-icon="icon-park:at-sign"></span>2022</p>
+        </div>
+        """
+    )
+
+
 with tab2:    
     st.header("Malaysia Covid19 Overview")
     st.subheader(f"Updated On: {df_date_end.at[df_date_end.index[0],'date']}")
