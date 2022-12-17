@@ -111,7 +111,7 @@ df_states = pd.merge(df_cases,df_deaths,on='state')
 df_states = pd.merge(df_states,df_vaksin,on='state')
 df_states = df_states.reset_index()
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(['Overview','Covid19','Blood Donation','Infrastructure','Disclaimer'])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(['Overview','Covid19','Blood Donation','Hospital Capacity','Disclaimer'])
 
 with tab1:
     st.subheader("[KKMNOW](https://data.moh.gov.my/) is an open data source in collaboration between the Ministry of Health Malaysia and the Department of Statistics Malaysia to institutionalise transparency and make data accessible for all.")
@@ -494,7 +494,7 @@ with tab3:
     #st.write(df_bloodDonor)
 
 with tab4:
-    st.subheader('Infrastructure')
+    st.subheader('Hospital Capacity')
     df_hospital = df_hospital.drop(0)
     df_mas_pop = df_mas_pop.drop([0,1])
     df_hospital = pd.merge(df_hospital,df_mas_pop, on='state')
@@ -502,7 +502,7 @@ with tab4:
     df_hospital['percentage'] = (df_hospital['total_beds']/df_hospital['pop'])*100
     # Hospital Nos. Of Beds Chart ICU
     df_hospital = df_hospital.sort_values('beds_icu', ascending=False)
-    fig_hospital_beds_icu = px.bar(df_hospital,x="state",y=["beds_icu"],barmode="group",title="Hospital Nos. Of Beds By States (ICU)",
+    fig_hospital_beds_icu = px.bar(df_hospital,x="state",y=["beds_icu"],barmode="group",title="Nos. Of Beds",
         template="plotly_white")
     fig_hospital_beds_icu.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
@@ -512,7 +512,7 @@ with tab4:
     fig_hospital_beds_icu.add_hline(y=df_hospital['beds_icu'].mean(), line_dash="dot",line_color="red",annotation_text="Average Nos.", annotation_position="bottom right")
     # Hospital Nos. Of Beds Chart Non ICU
     df_hospital = df_hospital.sort_values('beds_nonicu', ascending=False)
-    fig_hospital_beds_nonIcu = px.bar(df_hospital,x="state",y=["beds_nonicu"],barmode="group",title="Hospital Nos. Of Beds By States (Non ICU)",
+    fig_hospital_beds_nonIcu = px.bar(df_hospital,x="state",y=["beds_nonicu"],barmode="group",title="Nos. Of Beds",
         template="plotly_white")
     fig_hospital_beds_nonIcu.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
@@ -522,7 +522,7 @@ with tab4:
     fig_hospital_beds_nonIcu.add_hline(y=df_hospital['beds_nonicu'].mean(), line_dash="dot",line_color="red",annotation_text="Average Nos.", annotation_position="bottom right")
     # Hospital Nos. Of Beds Percentage
     df_hospital = df_hospital.sort_values('percentage', ascending=False)
-    fig_hospital_percentage = px.bar(df_hospital,x="state",y=["percentage"],barmode="group",title="Hospital Total Beds VS Population By States (%)",
+    fig_hospital_percentage = px.bar(df_hospital,x="state",y=["percentage"],barmode="group",title="(%)",
         template="plotly_white")
     fig_hospital_percentage.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
         plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
@@ -532,10 +532,13 @@ with tab4:
     fig_hospital_percentage.add_hline(y=df_hospital['percentage'].mean(), line_dash="dot",line_color="red",annotation_text="Average Nos.", annotation_position="bottom right")
     
     # Graph layout
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
+    col1.subheader('ICU')
     col1.plotly_chart(fig_hospital_beds_icu, use_container_width=True)
+    col2.subheader('Non ICU')
     col2.plotly_chart(fig_hospital_beds_nonIcu, use_container_width=True)
-    col3.plotly_chart(fig_hospital_percentage, use_container_width=True)
+    st.subheader('Percentage Of Beds By Population')
+    st.plotly_chart(fig_hospital_percentage, use_container_width=True)
     #st.write(df_hospital)
     #st.write(df_mas_pop)
 
