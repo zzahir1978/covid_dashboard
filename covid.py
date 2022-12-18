@@ -111,7 +111,7 @@ df_states = pd.merge(df_cases,df_deaths,on='state')
 df_states = pd.merge(df_states,df_vaksin,on='state')
 df_states = df_states.reset_index()
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(['Overview','Covid19','Blood Donation','Hospital Capacity','Disclaimer'])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(['Overview','Covid19','Blood Donation','Hospital Capacity','Population','Disclaimer'])
 
 with tab1:
     st.subheader("[KKMNOW](https://data.moh.gov.my/) is an open data source in collaboration between the Ministry of Health Malaysia and the Department of Statistics Malaysia to institutionalise transparency and make data accessible for all.")
@@ -540,9 +540,27 @@ with tab4:
     st.subheader('Percentage Of Beds By Population')
     st.plotly_chart(fig_hospital_percentage, use_container_width=True)
     #st.write(df_hospital)
-    #st.write(df_mas_pop)
 
 with tab5:
+    st.subheader('Population')
+    df_mas_pop['18-59'] = df_mas_pop['pop_18']+df_mas_pop['pop_60']
+    df_mas_pop['0-4'] = df_mas_pop['pop'] - (df_mas_pop['pop_18']+df_mas_pop['pop_12']+df_mas_pop['pop_5'])
+    df_mas_pop.rename(columns={'pop_12':'12-17','pop_60':'>60','pop_5':'5-11'},inplace=True)
+    #st.write(df_mas_pop)
+
+    # Deaths Cases Bar Chart
+    #fig_pop = px.bar(df_mas_pop,x="state",y=['>60','18-59','12-17','5-11','0-4'],barmode='group',title="Total Deaths by Year",template="plotly_white")
+    df_mas_pop = df_mas_pop.sort_values('pop',ascending=False)
+    fig_pop = px.bar(df_mas_pop,x="state",y='pop',barmode='group',title="Total Population",template="plotly_white")
+    fig_pop.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+    fig_pop.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_pop.update_xaxes(title_text='States', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_pop.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    #fig_pop.add_hline(y=df_selection['deaths_new'].mean(), line_dash="dot",line_color="red",annotation_text="Average Deaths", annotation_position="bottom left")
+    st.plotly_chart(fig_pop, use_container_width=True)
+
+with tab6:
     st.subheader('Disclaimer')
     st.write(
         '''
