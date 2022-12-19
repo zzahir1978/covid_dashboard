@@ -557,8 +557,57 @@ with tab5:
     fig_pop.update_annotations(font=dict(family="Helvetica", size=10))
     fig_pop.update_xaxes(title_text='States', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
     fig_pop.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
-    #fig_pop.add_hline(y=df_selection['deaths_new'].mean(), line_dash="dot",line_color="red",annotation_text="Average Deaths", annotation_position="bottom left")
     st.plotly_chart(fig_pop, use_container_width=True)
+
+    fig_pop_60 = px.bar(df_mas_pop,x="state",y='>60',barmode='group',title="Population",template="plotly_white")
+    fig_pop_60.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+    fig_pop_60.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_pop_60.update_xaxes(title_text='States', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_pop_60.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+
+    fig_pop_18 = px.bar(df_mas_pop,x="state",y='18-59',barmode='group',title="Population",template="plotly_white")
+    fig_pop_18.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+    fig_pop_18.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_pop_18.update_xaxes(title_text='States', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_pop_18.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+
+    fig_pop_12 = px.bar(df_mas_pop,x="state",y='12-17',barmode='group',title="Population",template="plotly_white")
+    fig_pop_12.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+    fig_pop_12.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_pop_12.update_xaxes(title_text='States', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_pop_12.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+
+    col1, col2, col3 = st.columns(3)
+    col1.subheader('Above 60')
+    col1.plotly_chart(fig_pop_60, use_container_width=True)
+    col2.subheader('18 to 59')
+    col2.plotly_chart(fig_pop_18, use_container_width=True)
+    col3.subheader('12 to 17')
+    col3.plotly_chart(fig_pop_12, use_container_width=True)
+
+    fig_pop_5 = px.bar(df_mas_pop,x="state",y='5-11',barmode='group',title="Population",template="plotly_white")
+    fig_pop_5.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+    fig_pop_5.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_pop_5.update_xaxes(title_text='States', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_pop_5.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+
+    fig_pop_4 = px.bar(df_mas_pop,x="state",y='0-4',barmode='group',title="Population",template="plotly_white")
+    fig_pop_4.update_layout(height=350,title_x=0.5,font=dict(family="Helvetica", size=10),xaxis=dict(tickmode="array"),
+        plot_bgcolor="rgba(0,0,0,0)",yaxis=(dict(showgrid=False)),showlegend=False,yaxis_title=None,xaxis_title=None)
+    fig_pop_4.update_annotations(font=dict(family="Helvetica", size=10))
+    fig_pop_4.update_xaxes(title_text='States', showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+    fig_pop_4.update_yaxes(showgrid=False, zeroline=False, showline=True, linewidth=2, linecolor='black')
+
+    col1, col2, col3 = st.columns(3)
+    col1.subheader('5 to 11')
+    col1.plotly_chart(fig_pop_5, use_container_width=True)
+    col2.subheader('Below 4')
+    col2.plotly_chart(fig_pop_4, use_container_width=True)
+
 
 with tab6:
     st.subheader('Disclaimer')
