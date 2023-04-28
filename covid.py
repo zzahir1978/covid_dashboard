@@ -13,9 +13,9 @@ import requests
 st.set_page_config(page_title="KKM Open Data Dashboard", page_icon=":warning:", layout="wide")       # https://www.webfx.com/tools/emoji-cheat-sheet/
 st.title(":bar_chart:"+" KKM Open Data Dashboard")
 
-@st.experimental_memo
-def read_csv(path) -> pd.DataFrame:
-    return pd.read_csv(path)
+#@st.experimental_memo
+#def read_csv(path) -> pd.DataFrame:
+    #return pd.read_csv(path)
 
 # IMPORTING ALL DATA
 # Covid Dataframe
