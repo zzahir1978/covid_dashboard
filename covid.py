@@ -13,50 +13,52 @@ import requests
 st.set_page_config(page_title="KKM Open Data Dashboard", page_icon=":warning:", layout="wide")       # https://www.webfx.com/tools/emoji-cheat-sheet/
 st.title(":bar_chart:"+" KKM Open Data Dashboard")
 
-#@st.experimental_memo
-#def read_csv(path) -> pd.DataFrame:
-    #return pd.read_csv(path)
+@st.cache(persist=True)
+def load_data():
+    # Covid Dataframe
+    df_mas_cases = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/cases_malaysia.csv')
+    df_mas_deaths = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/deaths_malaysia.csv')
+    df_mas_vaksin = pd.read_csv('https://raw.githubusercontent.com/CITF-Malaysia/citf-public/main/vaccination/vax_malaysia.csv')
+    df_mas_pop = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/static/population.csv')
+    df_bloodDonor = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/data-darah-public/main/donations_state.csv')
+    df_hospital = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/data-resources-public/main/bedutil_state.csv')
 
-# IMPORTING ALL DATA
-# Covid Dataframe
-df_mas_cases = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/cases_malaysia.csv')
-df_mas_deaths = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/deaths_malaysia.csv')
-df_mas_vaksin = pd.read_csv('https://raw.githubusercontent.com/CITF-Malaysia/citf-public/main/vaccination/vax_malaysia.csv')
-df_mas_pop = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/static/population.csv')
-df_bloodDonor = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/data-darah-public/main/donations_state.csv')
-df_hospital = pd.read_csv('https://raw.githubusercontent.com/MoH-Malaysia/data-resources-public/main/bedutil_state.csv')
-# Creating new columns
-df_mas_cases['cum_cases'] = df_mas_cases['cases_new'].cumsum()
-df_mas_cases['cum_recover'] = df_mas_cases['cases_recovered'].cumsum()
-df_mas_deaths['cum_deaths'] = df_mas_deaths['deaths_new'].cumsum()
-df_mas_vaksin['cum_vax'] = df_mas_vaksin['daily'].cumsum()
-df_mas_cases_graph = pd.merge(df_mas_cases,df_mas_vaksin,on='date')
-df_mas_cases_graph['vax_perc'] = (df_mas_cases_graph["daily_full"].cumsum()/df_mas_pop.at[df_mas_pop.index[0],'pop'])*100
-df_mas_deaths_graph = pd.merge(df_mas_deaths, df_mas_vaksin,on='date')
-df_mas_deaths_graph['vax_perc'] = (df_mas_deaths_graph["daily_full"].cumsum()/df_mas_pop.at[df_mas_pop.index[0],'pop'])*100
-#st.dataframe(df_mas_cases)
-# Creating New Date + Information
-df_date_end = df_mas_cases.tail(1)
-new_cases = df_mas_cases.tail(1)
-new_recover = df_mas_cases.tail(1)
-new_deaths = df_mas_deaths.tail(1)
-new_vaksin = df_mas_vaksin.tail(1)
-# Creating Yearly Data Tables
-df1 = pd.merge(df_mas_cases,df_mas_deaths,on='date')
-df1['frate'] = (df1['deaths_new']/df1['cases_new'])*100
-new_frate = df1.tail(1)
-#df_covid = df_mas_cases.append(df_mas_deaths)
-# add missing columns to df_mas_cases
-df_mas_cases['deaths_new'] = pd.Series(dtype='int64')
-df_mas_cases['cum_deaths'] = pd.Series(dtype='int64')
+    # Creating new columns
+    df_mas_cases['cum_cases'] = df_mas_cases['cases_new'].cumsum()
+    df_mas_cases['cum_recover'] = df_mas_cases['cases_recovered'].cumsum()
+    df_mas_deaths['cum_deaths'] = df_mas_deaths['deaths_new'].cumsum()
+    df_mas_vaksin['cum_vax'] = df_mas_vaksin['daily'].cumsum()
 
-# add missing columns to df_mas_deaths
-df_mas_deaths['cases_new'] = pd.Series(dtype='int64')
-df_mas_deaths['cum_cases'] = pd.Series(dtype='int64')
+    df_mas_cases_graph = pd.merge(df_mas_cases,df_mas_vaksin,on='date')
+    df_mas_cases_graph['vax_perc'] = (df_mas_cases_graph["daily_full"].cumsum()/df_mas_pop.at[df_mas_pop.index[0],'pop'])*100
+    df_mas_deaths_graph = pd.merge(df_mas_deaths, df_mas_vaksin,on='date')
+    df_mas_deaths_graph['vax_perc'] = (df_mas_deaths_graph["daily_full"].cumsum()/df_mas_pop.at[df_mas_pop.index[0],'pop'])*100
 
-# concatenate the dataframes
-df_covid = pd.concat([df_mas_cases, df_mas_deaths]).sort_values('date')
-df_covid = df_covid.append(df_mas_vaksin)
+    # Creating New Date + Information
+    df_date_end = df_mas_cases.tail(1)
+    new_cases = df_mas_cases.tail(1)
+    new_recover = df_mas_cases.tail(1)
+    new_deaths = df_mas_deaths.tail(1)
+    new_vaksin = df_mas_vaksin.tail(1)
+
+    # Creating Yearly Data Tables
+    df1 = pd.merge(df_mas_cases,df_mas_deaths,on='date')
+    df1['frate'] = (df1['deaths_new']/df1['cases_new'])*100
+    new_frate = df1.tail(1)
+
+    # add missing columns to df_mas_cases
+    df_mas_cases['deaths_new'] = pd.Series(dtype='int64')
+    df_mas_cases['cum_deaths'] = pd.Series(dtype='int64')
+
+    # add missing columns to df_mas_deaths
+    df_mas_deaths['cases_new'] = pd.Series(dtype='int64')
+    df_mas_deaths['cum_cases'] = pd.Series(dtype='int64')
+
+    # concatenate the dataframes
+    df_covid = pd.concat([df_mas_cases, df_mas_deaths]).sort_values('date')
+    df_covid = df_covid.append(df_mas_vaksin)
+
+    return df_mas_cases, df_mas_deaths, df_mas_vaksin, df_mas_pop, df_bloodDonor, df_hospital, df_mas_cases_graph, df_mas_deaths_graph, df
 
 def getYear(s):
   return s.split("-")[0]
