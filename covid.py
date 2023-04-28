@@ -46,7 +46,16 @@ df1 = pd.merge(df_mas_cases,df_mas_deaths,on='date')
 df1['frate'] = (df1['deaths_new']/df1['cases_new'])*100
 new_frate = df1.tail(1)
 #df_covid = df_mas_cases.append(df_mas_deaths)
-df_covid = pd.concat([df_mas_cases, df_mas_deaths])
+# add missing columns to df_mas_cases
+df_mas_cases['deaths_new'] = pd.Series(dtype='int64')
+df_mas_cases['cum_deaths'] = pd.Series(dtype='int64')
+
+# add missing columns to df_mas_deaths
+df_mas_deaths['cases_new'] = pd.Series(dtype='int64')
+df_mas_deaths['cum_cases'] = pd.Series(dtype='int64')
+
+# concatenate the dataframes
+df_covid = pd.concat([df_mas_cases, df_mas_deaths]).sort_values('date')
 df_covid = df_covid.append(df_mas_vaksin)
 
 def getYear(s):
