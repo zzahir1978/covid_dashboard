@@ -45,8 +45,9 @@ new_vaksin = df_mas_vaksin.tail(1)
 df1 = pd.merge(df_mas_cases,df_mas_deaths,on='date')
 df1['frate'] = (df1['deaths_new']/df1['cases_new'])*100
 new_frate = df1.tail(1)
-df_covid = df_mas_cases.append(df_mas_deaths)
-df_covid = df_covid.append(df_mas_vaksin)
+#df_covid = df_mas_cases.append(df_mas_deaths)
+df_covid = pd.concat([df_mas_cases, df_mas_deaths, df_mas_vaksin], axis=0)
+#df_covid = df_covid.append(df_mas_vaksin)
 
 def getYear(s):
   return s.split("-")[0]
